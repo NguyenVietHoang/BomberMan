@@ -47,7 +47,7 @@ public class GlobalManager : MonoBehaviour
                 StartCoroutine(mapControl.MovePlayer(player, new Vector2(0, -1)));
             }                
         } ;
-        player.input.onBombKeyPressed += () => mapControl.PlaceBomb(player);
+        player.input.onBombKeyPressed += () => { StartCoroutine(mapControl.PlaceBomb(player)); };
 
         mapControl.SetPlayer(player);
     }

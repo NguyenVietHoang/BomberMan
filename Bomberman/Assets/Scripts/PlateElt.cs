@@ -5,8 +5,8 @@ using UnityEngine;
 [SerializeField]
 public class PlateElt
 {
-    //Position of the plate
-    public Vector2 position;
+    //Position of the Interactable can place on the plate
+    public Vector3 position;
 
     //List of obstacle on this square: wall, d-wall, bomb
     public Obstacle obstacle;

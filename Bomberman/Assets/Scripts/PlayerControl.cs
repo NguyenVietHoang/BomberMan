@@ -92,11 +92,11 @@ public class PlayerControl : Interactable
                 float step = Time.deltaTime * speed;
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
             }
-            else
-            {
-                IsMoving = false;
-                transform.position = targetPos;
-            }
+            //else
+            //{
+            //    IsMoving = false;
+            //    transform.position = targetPos;
+            //}
         }
     }
 }

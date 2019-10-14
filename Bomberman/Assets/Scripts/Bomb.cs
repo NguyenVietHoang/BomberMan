@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Bomb : Obstacle
 {
+    //Delegate only for UI
     public delegate void OnEventEnded();
     public OnEventEnded OnCooldownEnded;
 

@@ -11,7 +11,7 @@ public class Wall : Obstacle
 
     public MeshRenderer mesh;
 
-    private void Start()
+    private void Awake()
     {
         if(wallDestroyed)
         {
