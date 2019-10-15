@@ -36,7 +36,9 @@ public class PlateManager : MonoBehaviour
                 Vector3 wallPos = walls[i].transform.position;
                 int x = Mathf.RoundToInt(wallPos.x);
                 int y = Mathf.RoundToInt(wallPos.z);
-                map[GetMapIndex(x, y)] = new PlateElt
+                int mapIndex = GetMapIndex(x, y);
+                Debug.Log(walls[i].name+" "+x + "_" + y + "_" + mapIndex);
+                map[mapIndex] = new PlateElt
                 {
                     position = new Vector3(x, 0.5f, y),
                     obstacle = walls[i],
@@ -63,7 +65,7 @@ public class PlateManager : MonoBehaviour
     //Convert 2D vector to 1D array index
     public int GetMapIndex(int x, int y)
     {
-        return x + y * mapHeight;
+        return y*mapWidth + x;
     }
     public int GetMapIndex(float x, float y)
     {
@@ -170,10 +172,9 @@ public class PlateManager : MonoBehaviour
                 if (w.canDestroy)
                 {
                     w.mesh.enabled = false;
-                    if(w.pickUp != null)
+                    if(CheckPickupExists(mapIndex))
                     {
                         w.pickUp.mesh.enabled = true;
-                        map[mapIndex].interactables.Add(w.pickUp);
                     }
                     InitFireObject(mapIndex);
                 }
@@ -209,7 +210,15 @@ public class PlateManager : MonoBehaviour
         };
     }
 
-
+    bool CheckPickupExists(int mapIndex)
+    {
+        foreach(Interactable i in map[mapIndex].interactables)
+        {
+            if (i is PickUp)
+                return true;
+        }
+        return false;
+    }
     public IEnumerator MovePlayer(PlayerControl player,Vector2 newPos)
     {             
         Vector2 currentPos = player.currentPos;

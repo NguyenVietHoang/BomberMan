@@ -29,11 +29,6 @@ public class Wall : Obstacle
         {
             wallDestroyed = true;
             mesh.enabled = false;
-            if(pickUp != null && pickUp.enabled)
-            {
-                Debug.Log("Enable Pickup");
-                pickUp.mesh.enabled = true;
-            }
         }
     }
 }
