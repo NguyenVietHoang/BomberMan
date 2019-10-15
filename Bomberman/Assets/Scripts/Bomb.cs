@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class Bomb : Obstacle
 {
-    //Delegate only for UI
+    //Delegate for event when bomb was triggered
     public delegate void OnEventEnded();
     public OnEventEnded OnCooldownEnded;
+    public Coroutine onBombCD;
 
-    Vector2 currentPos;
+    public Vector2 currentPos;
     //Time before explose
     public float cooldown;
     //Power of the bomb
@@ -25,32 +26,30 @@ public class Bomb : Obstacle
     }
 
     //Set the bomb countdown
-    public void TriggerCountdown()
+    public IEnumerator TriggerCountdown()
     {
         isCountdown = true;
-        currentCD = cooldown;
+        
+        yield return new WaitForSeconds(cooldown);
+
+        //Debug.Log("On Bomb CD");
+        TriggerExplose();       
     }
 
     //Trigger the bomb to explose
     public void TriggerExplose()
     {
+        //Debug.Log("Trigger explose.");
+        isCountdown = false;
+
+        //Trigger Event
         OnCooldownEnded?.Invoke();
         OnCooldownEnded = null;
     }
 
     private void Update()
     {
-        if(isCountdown)
-        {
-            if(currentCD > 0)
-            {
-                currentCD -= Time.deltaTime;
-            }
-            else
-            {
-                TriggerExplose();
-            }
-        }
+        
     }
 
 }

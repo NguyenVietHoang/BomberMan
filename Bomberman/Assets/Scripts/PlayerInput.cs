@@ -17,16 +17,22 @@ public class PlayerInput : MonoBehaviour
     public KeyCode down = KeyCode.S;
     public KeyCode bomb = KeyCode.Space;
 
+    public float currentBombCD;
     // Start is called before the first frame update
     void Start()
     {
         //TODO: Import Input from the Input Manager
+        currentBombCD = Const.INPUT_BOMB_CD;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(left))
+        if (currentBombCD > 0)
+        {
+            currentBombCD -= Time.deltaTime;
+        }
+        if (Input.GetKey(left))
         {
             onLeftKeyPressed?.Invoke();
             //Debug.Log("Press Left");
@@ -48,8 +54,11 @@ public class PlayerInput : MonoBehaviour
         }
         if (Input.GetKey(bomb))
         {
-            onBombKeyPressed?.Invoke();
-            //Debug.Log("Press Bomb");
+            if(currentBombCD < 0)
+            {
+                currentBombCD = Const.INPUT_BOMB_CD;
+                onBombKeyPressed?.Invoke();
+            }
         }
     }
 }

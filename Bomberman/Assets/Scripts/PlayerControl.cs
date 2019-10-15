@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerControl : Interactable
 {
+    public GlobalManager manager;
+
     [HideInInspector]
     public Vector2 currentPos;
     Vector3 targetPos;
@@ -14,13 +16,15 @@ public class PlayerControl : Interactable
     public bool IsMoving { get; private set; }
     public PlayerInput input;
     public Animator anim;
-
+    
+    public int currentBomb { get; private set; }
     // Start is called before the first frame update
     public void Init()
     {
         targetPos = transform.position;
         currentPos = new Vector2(targetPos.x, targetPos.z);
         IsMoving = false;
+        currentBomb = bombNB;
     }
 
     public void LockMvt()
@@ -54,32 +58,43 @@ public class PlayerControl : Interactable
         currentPos = new Vector2(newPos.x, newPos.z);
         anim.SetBool("Walking", false);
     }
-    //
-    public void PickUp(PickUp.PickUpType type, float value)
+
+    //Call this to check the bomb number
+    public void PlaceBomb(int value)
     {
-        switch (type)
+        currentBomb += value;
+        currentBomb = Mathf.Clamp(currentBomb, 0, bombNB);
+    }
+    //Affect pickup to player
+    public void PickUp(PickUp pickup)
+    {
+        //Debug.Log("Pickup");
+        switch (pickup.type)
         {
             case global::PickUp.PickUpType.PowerUp:
                 if(power < Const.MAX_PLAYER_POWER)
                 {
-                    power+=Mathf.RoundToInt(value);
+                    power+=Mathf.RoundToInt(pickup.value);
                 }
                 break;
             case global::PickUp.PickUpType.SpeedUp:
                 if (speed < Const.MAX_PLAYER_SPEED)
                 {
-                    speed += value;
+                    speed += pickup.value;
                 }
                 break;
             case global::PickUp.PickUpType.BombUp:
                 if (bombNB < Const.MAX_PLAYER_BOMB)
                 {
-                    bombNB += Mathf.RoundToInt(value);
+                    currentBomb += Mathf.RoundToInt(pickup.value);
+                    bombNB += Mathf.RoundToInt(pickup.value);
                 }
                 break;
             default:
                 break;
         }
+
+        pickup.DestroyObject();
     }
 
     // Update is called once per frame
@@ -98,5 +113,11 @@ public class PlayerControl : Interactable
             //    transform.position = targetPos;
             //}
         }
+    }
+
+    public override void DestroyObject()
+    {
+        base.DestroyObject();
+        manager.OnPlayerDeath(this);
     }
 }
